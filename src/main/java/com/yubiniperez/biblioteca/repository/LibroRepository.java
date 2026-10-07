@@ -21,7 +21,11 @@ public interface LibroRepository extends JpaRepository<Libro, Long> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT l FROM Libro l WHERE l.id = :id AND l.activo = true")
     Optional<Libro> findActivoParaActualizar(@Param("id") Long id);
-
+    // Igual que findActivoParaActualizar, pero sin filtrar por activo:
+    // permite devolver un libro que se eliminó lógicamente con préstamos pendientes
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT l FROM Libro l WHERE l.id = :id")
+    Optional<Libro> findByIdParaActualizar(@Param("id") Long id);
     // Texto vacío ("") coincide con todos los libros
     @Query("""
            SELECT l FROM Libro l
